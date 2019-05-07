@@ -34,6 +34,7 @@ public class CartoonChapterController {
 
     /**
      * 章节管理
+     *
      * @param cartoonId
      * @param pageNo
      * @param model
@@ -50,6 +51,7 @@ public class CartoonChapterController {
 
     /**
      * 初始化添加章节页面
+     *
      * @param cartoonId
      * @param model
      * @return
@@ -63,23 +65,25 @@ public class CartoonChapterController {
 
     /**
      * 初始化添加修改页面
+     *
      * @param chapterId
      * @param model
      * @return
      */
     @GetMapping("/{cartoonId}/chapters/{chapterId}/init")
-    public String initModify(@PathVariable(name = "cartoonId")Long cartoonId,@PathVariable(name = "chapterId") Long chapterId, Model model) {
+    public String initModify(@PathVariable(name = "cartoonId") Long cartoonId, @PathVariable(name = "chapterId") Long chapterId, Model model) {
         CartoonChapter cartoonChapter = cartoonChapterService.findByChapterId(chapterId, true);
-        if(cartoonChapter != null){
+        if (cartoonChapter != null) {
             Cartoon cartoon = cartoonService.findByCartoonId(cartoonChapter.getCartoonId());
             model.addAttribute("cartoon", cartoon);
         }
-        model.addAttribute("cartoonChapter",cartoonChapter);
+        model.addAttribute("cartoonChapter", cartoonChapter);
         return "chapterModify";
     }
 
     /**
      * 添加章节
+     *
      * @param cartoonId
      * @param title
      * @param isFree
@@ -137,7 +141,7 @@ public class CartoonChapterController {
 
     @PostMapping("/{cartoonId}/chapters/{chapterId}")
     @ResponseBody
-    public Map<String, Object> modify(@PathVariable("cartoonId")Long cartoonId,@PathVariable(name = "chapterId") Long chapterId, String title, Integer isFree, String pictures, @RequestParam(name = "coverPic") MultipartFile coverFile) {
+    public Map<String, Object> modify(@PathVariable("cartoonId") Long cartoonId, @PathVariable(name = "chapterId") Long chapterId, String title, Integer isFree, String pictures, @RequestParam(name = "coverPic") MultipartFile coverFile) {
         if (chapterId == null) {
             return AjaxResultUtils.error("参数有误");
         }
@@ -157,7 +161,7 @@ public class CartoonChapterController {
         }
         cartoonChapter.setTitle(title);
         cartoonChapter.setIsFree(isFree);
-        if(coverFile != null && !coverFile.isEmpty()){
+        if (coverFile != null && !coverFile.isEmpty()) {
             try {
                 String coverPic = CartoonUploadUtils.uploadChapterPicture(cartoonChapter.getCartoonId(), coverFile);
                 cartoonChapter.setCoverPic(coverPic);
@@ -183,6 +187,7 @@ public class CartoonChapterController {
 
     /**
      * 上传章节内容
+     *
      * @param cartoonId
      * @param pictureFile
      * @return
@@ -212,13 +217,14 @@ public class CartoonChapterController {
 
     /**
      * 显示/隐藏章节
+     *
      * @param chapterId
      * @param isDelete
      * @return
      */
     @PatchMapping("/{cartoonId}/chapters/{chapterId}/{isDelete}")
     @ResponseBody
-    public Map<String, Object> reverse(@PathVariable("chapterId") Long chapterId, @PathVariable("isDelete") Integer isDelete) {
+    public Map<String, Object> reverse(@PathVariable("cartoonId") Long cartoonId, @PathVariable("chapterId") Long chapterId, @PathVariable("isDelete") Integer isDelete) {
         if (chapterId == null || isDelete == null) {
             return AjaxResultUtils.error("参数有误.");
         }
@@ -236,17 +242,18 @@ public class CartoonChapterController {
 
     /**
      * 预览章节
+     *
      * @param chapterId
      * @return
      */
     @GetMapping("/{cartoonId}/chapters/{chapterId}")
     @ResponseBody
-    public Map<String, Object> preview(@PathVariable("chapterId") Long chapterId) {
+    public Map<String, Object> preview(@PathVariable("cartoonId") Long cartoonId, @PathVariable("chapterId") Long chapterId) {
         if (chapterId == null) {
             return AjaxResultUtils.error("参数有误.");
         }
         CartoonChapter cartoonChapter = cartoonChapterService.findByChapterId(chapterId, true);
-        if(cartoonChapter != null){
+        if (cartoonChapter != null) {
             return AjaxResultUtils.success(cartoonChapter);
         }
         return AjaxResultUtils.error("预览失败");
