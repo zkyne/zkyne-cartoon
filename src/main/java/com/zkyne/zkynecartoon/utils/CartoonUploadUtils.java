@@ -45,7 +45,7 @@ public class CartoonUploadUtils {
             throw new Exception("上传图片格式有误");
         }
         // 新文件名
-        fileName = UUID.randomUUID() + suffixName;
+        fileName = UUID.randomUUID().toString().replaceAll("-","") + suffixName;
         File dest = new File(parentPath + fileName);
         if (!dest.getParentFile().exists()) {
             boolean mkdirs = dest.getParentFile().mkdirs();
