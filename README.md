@@ -1,2 +1,2 @@
 # zkyne-cartoon
-cartoon author console 
+一个简单的漫画作者后台
