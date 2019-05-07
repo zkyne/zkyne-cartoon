@@ -21,7 +21,7 @@
     <#include "common/top.ftl"/>
     <div class="panel panel-info">
         <div class="panel-body" id="panelBody">
-            <form class="form-horizontal" action="/cartoon/add">
+            <form class="form-horizontal" action="">
                 <div class="row">
                     <div class="col-xs-8">
                         <div class="form-group">
@@ -60,7 +60,7 @@
                             <label for="type" class="col-xs-4 control-label">章节内容:</label>
                             <div class="col-xs-8 col-xs-offset-4">
                                 <div class="case">
-                                    <div class="upload" data-name="pictures" action='/chapter/${cartoon.cartoonId?c}/upload' data-value='<#if cartoonChapter.chapterPicturesStr??>${cartoonChapter.chapterPicturesStr}</#if>' id='case3'></div>
+                                    <div class="upload" data-name="pictures" action='/cartoons/${cartoonChapter.cartoonId?c}/chapters/upload' data-value='<#if cartoonChapter.chapterPicturesStr??>${cartoonChapter.chapterPicturesStr}</#if>' id='case3'></div>
                                 </div>
                             </div>
                         </div>
@@ -69,7 +69,7 @@
                 <div class="row">
                     <div class="form-group">
                         <div class="col-xs-3 col-xs-offset-9">
-                            <button type="button" onclick="cartoon._modifyChapter('<#if cartoonChapter.chapterId??>${cartoonChapter.chapterId?c}</#if>');" id="btn-modifyChapter" class="btn btn-success">
+                            <button type="button" onclick="cartoon._modifyChapter('<#if cartoonChapter.cartoonId??>${cartoonChapter.cartoonId?c}</#if>','<#if cartoonChapter.chapterId??>${cartoonChapter.chapterId?c}</#if>');" id="btn-modifyChapter" class="btn btn-success">
                                 <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>  更新章节
                             </button>&nbsp;&nbsp;&nbsp;&nbsp;
                             <button type="button" onclick="history.go(-1);" id="btn-addChapter" class="btn btn-default">

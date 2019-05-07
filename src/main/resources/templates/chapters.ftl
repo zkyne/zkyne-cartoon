@@ -69,13 +69,13 @@
                                      </#if>
                                  </td>
                                  <td style="padding: 2px 2px 2px ">
-                                     <button type="button" onclick="cartoon._previewChapter('<#if chapter.chapterId??>${chapter.chapterId?c}</#if>')" class="btn btn-success">
+                                     <button type="button" onclick="cartoon._previewChapter('<#if chapter.cartoonId??>${chapter.cartoonId?c}</#if>','<#if chapter.chapterId??>${chapter.chapterId?c}</#if>')" class="btn btn-success">
                                          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>  预 览
                                      </button>
-                                     <button type="button" onclick="cartoon._initModifyChapter('<#if chapter.chapterId??>${chapter.chapterId?c}</#if>')" class="btn btn-warning">
+                                     <button type="button" onclick="cartoon._initModifyChapter('<#if chapter.cartoonId??>${chapter.cartoonId?c}</#if>','<#if chapter.chapterId??>${chapter.chapterId?c}</#if>')" class="btn btn-warning">
                                          <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>  编 辑
                                      </button>
-                                     <button type="button" onclick="cartoon._reverseChapter(this,'<#if chapter.chapterId??>${chapter.chapterId?c}</#if>')" class="btn btn-${(chapter.isDelete==0)?string('danger','info')}">
+                                     <button type="button" onclick="cartoon._reverseChapter(this,'<#if chapter.cartoonId??>${chapter.cartoonId?c}</#if>','<#if chapter.chapterId??>${chapter.chapterId?c}</#if>')" class="btn btn-${(chapter.isDelete==0)?string('danger','info')}">
                                          <span class="glyphicon glyphicon-${(chapter.isDelete==0)?string('eye-close','eye-open')}" aria-hidden="true"></span>  ${(chapter.isDelete==0)?string('隐 藏','显 示')}
                                      </button>
                                  </td>

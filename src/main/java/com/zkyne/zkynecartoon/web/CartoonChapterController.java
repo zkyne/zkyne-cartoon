@@ -2,7 +2,6 @@ package com.zkyne.zkynecartoon.web;
 
 import com.zkyne.zkynecartoon.entity.Cartoon;
 import com.zkyne.zkynecartoon.entity.CartoonChapter;
-import com.zkyne.zkynecartoon.entity.ChapterPicture;
 import com.zkyne.zkynecartoon.service.ICartoonChapterService;
 import com.zkyne.zkynecartoon.service.ICartoonService;
 import com.zkyne.zkynecartoon.utils.AjaxResultUtils;
@@ -12,14 +11,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,7 +24,7 @@ import java.util.Map;
  * @Date: 2019/4/18 11:07
  */
 @Controller
-@RequestMapping("chapter")
+@RequestMapping("cartoons")
 @Slf4j
 public class CartoonChapterController {
     @Resource
@@ -44,7 +39,7 @@ public class CartoonChapterController {
      * @param model
      * @return
      */
-    @RequestMapping("/{cartoonId}/list")
+    @GetMapping("/{cartoonId}/chapters")
     public String listChapters(@PathVariable(name = "cartoonId") Long cartoonId, @RequestParam(name = "pageNo", defaultValue = "1") Integer pageNo, Model model) {
         Cartoon cartoon = cartoonService.findByCartoonId(cartoonId);
         model.addAttribute("cartoon", cartoon);
@@ -59,7 +54,7 @@ public class CartoonChapterController {
      * @param model
      * @return
      */
-    @RequestMapping("/{cartoonId}/initAdd")
+    @GetMapping("/{cartoonId}/chapters/init")
     public String initAdd(@PathVariable(name = "cartoonId") Long cartoonId, Model model) {
         Cartoon cartoon = cartoonService.findByCartoonId(cartoonId);
         model.addAttribute("cartoon", cartoon);
@@ -72,8 +67,8 @@ public class CartoonChapterController {
      * @param model
      * @return
      */
-    @RequestMapping("/{chapterId}/initModify")
-    public String initModify(@PathVariable(name = "chapterId") Long chapterId, Model model) {
+    @GetMapping("/{cartoonId}/chapters/{chapterId}/init")
+    public String initModify(@PathVariable(name = "cartoonId")Long cartoonId,@PathVariable(name = "chapterId") Long chapterId, Model model) {
         CartoonChapter cartoonChapter = cartoonChapterService.findByChapterId(chapterId, true);
         if(cartoonChapter != null){
             Cartoon cartoon = cartoonService.findByCartoonId(cartoonChapter.getCartoonId());
@@ -92,7 +87,7 @@ public class CartoonChapterController {
      * @param coverFile
      * @return
      */
-    @RequestMapping("/{cartoonId}/add")
+    @PostMapping("/{cartoonId}/chapters")
     @ResponseBody
     public Map<String, Object> add(@PathVariable(name = "cartoonId") Long cartoonId, String title, Integer isFree, String pictures, @RequestParam(name = "coverPic") MultipartFile coverFile) {
         if (cartoonId == null) {
@@ -133,16 +128,16 @@ public class CartoonChapterController {
         }
         try {
             cartoonChapterService.addChapter(cartoonChapter);
-            return AjaxResultUtils.success();
+            return AjaxResultUtils.success(cartoonChapter);
         } catch (Exception e) {
             log.error("漫画章节创建->>漫画ID:{},创建失败:error:{}", cartoonId, e);
             return AjaxResultUtils.error("章节添加失败");
         }
     }
 
-    @RequestMapping("/{chapterId}/modify")
+    @PostMapping("/{cartoonId}/chapters/{chapterId}")
     @ResponseBody
-    public Map<String, Object> modify(@PathVariable(name = "chapterId") Long chapterId, String title, Integer isFree, String pictures, @RequestParam(name = "coverPic") MultipartFile coverFile) {
+    public Map<String, Object> modify(@PathVariable("cartoonId")Long cartoonId,@PathVariable(name = "chapterId") Long chapterId, String title, Integer isFree, String pictures, @RequestParam(name = "coverPic") MultipartFile coverFile) {
         if (chapterId == null) {
             return AjaxResultUtils.error("参数有误");
         }
@@ -179,7 +174,7 @@ public class CartoonChapterController {
 
         try {
             cartoonChapterService.modifyChapter(cartoonChapter);
-            return AjaxResultUtils.success();
+            return AjaxResultUtils.success(cartoonChapter);
         } catch (Exception e) {
             log.error("漫画章节更新->>漫画章节ID:{},创建失败:error:{}", chapterId, e);
             return AjaxResultUtils.error("章节更新失败");
@@ -192,7 +187,7 @@ public class CartoonChapterController {
      * @param pictureFile
      * @return
      */
-    @RequestMapping("/{cartoonId}/upload")
+    @PostMapping("/{cartoonId}/chapters/upload")
     @ResponseBody
     public Map<String, Object> upload(@PathVariable(name = "cartoonId") Long cartoonId, @RequestParam(name = "file") MultipartFile pictureFile) {
         if (cartoonId == null) {
@@ -221,7 +216,7 @@ public class CartoonChapterController {
      * @param isDelete
      * @return
      */
-    @RequestMapping("/{chapterId}/{isDelete}")
+    @PatchMapping("/{cartoonId}/chapters/{chapterId}/{isDelete}")
     @ResponseBody
     public Map<String, Object> reverse(@PathVariable("chapterId") Long chapterId, @PathVariable("isDelete") Integer isDelete) {
         if (chapterId == null || isDelete == null) {
@@ -244,7 +239,7 @@ public class CartoonChapterController {
      * @param chapterId
      * @return
      */
-    @RequestMapping("/{chapterId}/preview")
+    @GetMapping("/{cartoonId}/chapters/{chapterId}")
     @ResponseBody
     public Map<String, Object> preview(@PathVariable("chapterId") Long chapterId) {
         if (chapterId == null) {

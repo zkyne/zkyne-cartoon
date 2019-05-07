@@ -10,9 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -26,7 +24,7 @@ import java.util.Map;
  * @Date: 2019/4/18 11:05
  */
 @Controller
-@RequestMapping("cartoon")
+@RequestMapping("cartoons")
 @Slf4j
 public class CartoonConroller {
     @Resource
@@ -34,14 +32,14 @@ public class CartoonConroller {
     @Resource
     private ICategoryService categoryService;
 
-    @RequestMapping("/initAdd")
+    @GetMapping("/init")
     public String initAdd(Model model) {
         List<Category> categoryList = categoryService.findAll();
         model.addAttribute("categoryList", categoryList);
         return "cartoonAdd";
     }
 
-    @RequestMapping("/add")
+    @PostMapping("")
     @ResponseBody
     public Map<String, Object> add(String title, String author, Long categoryId, Integer type, Integer finishStatus,
                                    @RequestParam(name = "priceUnitChapter", required = false, defaultValue = "0") Integer priceUnitChapter,
@@ -92,7 +90,7 @@ public class CartoonConroller {
         try{
             cartoonService.addCartoon(cartoon);
             if (cartoon.getCartoonId() != null) {
-                return AjaxResultUtils.success(cartoon.getCartoonId());
+                return AjaxResultUtils.success(cartoon);
             }
             return AjaxResultUtils.error("作品创建失败");
         }catch (Exception e){

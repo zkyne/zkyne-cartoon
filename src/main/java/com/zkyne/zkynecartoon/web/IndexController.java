@@ -5,6 +5,7 @@ import com.zkyne.zkynecartoon.service.ICartoonService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -22,15 +23,10 @@ public class IndexController {
     @Resource
     private ICartoonService cartoonService;
 
-    @RequestMapping("")
+    @GetMapping(value = {"/cartoons",""})
     public String index(@RequestParam(name = "pageNo",defaultValue = "1")Integer pageNo, Model model) {
         Page<Cartoon> page = cartoonService.findByPage(pageNo, 10);
         model.addAttribute("page", page);
         return "cartoons";
-    }
-
-    @RequestMapping("upload")
-    public String upload() {
-        return "upload";
     }
 }

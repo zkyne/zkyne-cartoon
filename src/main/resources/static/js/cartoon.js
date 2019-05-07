@@ -7,34 +7,34 @@ $(function () {
 var cartoon = {
     URL:{
         _listCartoons:function () {
-            return "/";
+            return "/cartoons";
         },
         _listChapters:function (cartoonId) {
-            return "/chapter/"+ Number(cartoonId) + "/list";
+            return "/cartoons/"+ Number(cartoonId) + "/chapters";
         },
         _initAddCartoon:function () {
-            return "/cartoon/initAdd";
+            return "/cartoons/init";
         },
         _addCartoon:function () {
-            return  "/cartoon/add";
+            return  "/cartoons";
         },
         _initAddChapter:function (cartoonId) {
-            return "/chapter/" + Number(cartoonId) + "/initAdd";
+            return "/cartoons/" + Number(cartoonId) + "/chapters/init";
         },
         _addChapter:function (cartoonId) {
-            return "/chapter/" + Number(cartoonId) + "/add";
+            return "/cartoons/" + Number(cartoonId) + "/chapters";
         },
-        _reverseChapter:function (chapterId,isDelete) {
-            return "/chapter/" + Number(chapterId) + "/" + Number(isDelete);
+        _reverseChapter:function (cartoonId,chapterId,isDelete) {
+            return "/cartoons/" + Number(cartoonId) + "/chapters/"+ Number(chapterId) +"/"+ Number(isDelete);
         },
-        _previewChapter:function (chapterId) {
-            return "/chapter/" + Number(chapterId) + "/preview";
+        _previewChapter:function (cartoonId,chapterId) {
+            return "/cartoons/" + Number(cartoonId) + "/chapters/"+Number(chapterId);
         },
-        _initModifyChapter:function (chapterId) {
-            return "/chapter/" + Number(chapterId) + "/initModify";
+        _initModifyChapter:function (cartoonId,chapterId) {
+            return "/cartoons/" + Number(cartoonId) + "/chapters/" + Number(chapterId) + "/init";
         },
-        _modifyChapter:function (chapterId) {
-            return "/chapter/" + Number(chapterId) + "/modify";
+        _modifyChapter:function (cartoonId, chapterId) {
+            return "/cartoons/" + Number(cartoonId) + "/chapters/"+ Number(chapterId);
         }
     },
     _reload:function (uri) {
@@ -66,6 +66,7 @@ var cartoon = {
         $.ajaxFileUpload({
             url:cartoon.URL._addCartoon(),
             data:dataJ,
+            type:"post",
             secureuri: false,
             fileElementId: 'coverPic',
             cache: false,
@@ -74,7 +75,7 @@ var cartoon = {
             success : function(result){
                 $('#btn-addCartoon').html("创建漫画").prop("disabled",false);
                 if(result.code === 200){
-                    cartoon._initAddChapter(result.data);
+                    cartoon._initAddChapter(result.data.cartoonId);
                 }else{
                     toastr.error(result.message);
                 }
@@ -104,6 +105,7 @@ var cartoon = {
         $.ajaxFileUpload({
             url:cartoon.URL._addChapter(cartoonId),
             data:dataJ,
+            type:"post",
             secureuri: false,
             fileElementId: 'coverPic',
             cache: false,
@@ -127,7 +129,7 @@ var cartoon = {
             }
         })
     },
-    _reverseChapter:function (obj,chapterId) {
+    _reverseChapter:function (obj,cartoonId,chapterId) {
         var str = "显示";
         var $curBtn = $(obj);
         var status = $curBtn.parents('tr#curTr').find('td#isDelete').attr('data-value');
@@ -139,8 +141,8 @@ var cartoon = {
         Ewin.confirm({message: "您确认要" + str + "该章节吗？"}).on(function (e) {
             if (e) {
                 $.ajax({
-                    url:cartoon.URL._reverseChapter(chapterId,isDelete),
-                    type:'get',
+                    url:cartoon.URL._reverseChapter(cartoonId,chapterId,isDelete),
+                    type:'patch',
                     data:{},
                     dataType:'json',
                     success:function (result) {
@@ -172,9 +174,9 @@ var cartoon = {
             }
         });
     },
-    _previewChapter:function (chapterId) {
+    _previewChapter:function (cartoonId, chapterId) {
         $.ajax({
-            url:cartoon.URL._previewChapter(chapterId),
+            url:cartoon.URL._previewChapter(cartoonId,chapterId),
             type:'get',
             data:{},
             dataType:'json',
@@ -203,10 +205,10 @@ var cartoon = {
             }
         });
     },
-    _initModifyChapter:function (chapterId) {
-        cartoon._reload(cartoon.URL._initModifyChapter(chapterId));
+    _initModifyChapter:function (cartoonId,chapterId) {
+        cartoon._reload(cartoon.URL._initModifyChapter(cartoonId,chapterId));
     },
-    _modifyChapter:function (chapterId) {
+    _modifyChapter:function (cartoonId,chapterId) {
         var pictures = $('#pictures').val();
         var pictureArray = pictures.split(',');
         if(pictureArray.length < ($('.case li').length-1)){
@@ -220,8 +222,9 @@ var cartoon = {
         };
         $('#btn-modifyChapter').html("更新中").prop("disabled","disabled");
         $.ajaxFileUpload({
-            url:cartoon.URL._modifyChapter(chapterId),
+            url:cartoon.URL._modifyChapter(cartoonId,chapterId),
             data:dataJ,
+            type:"put",
             secureuri: false,
             fileElementId: 'coverPic',
             cache: false,

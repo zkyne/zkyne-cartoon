@@ -21,7 +21,7 @@
     <#include "common/top.ftl"/>
     <div class="panel panel-info">
         <div class="panel-body" id="panelBody">
-            <form class="form-horizontal" action="/cartoon/add">
+            <form class="form-horizontal" action="">
                 <div class="row">
                     <div class="col-xs-8">
                         <div class="form-group">
@@ -60,7 +60,7 @@
                             <label for="type" class="col-xs-4 control-label">章节内容:</label>
                             <div class="col-xs-8 col-xs-offset-4">
                                 <div class="case">
-                                    <div class="upload" data-name="pictures" action='/chapter/${cartoon.cartoonId?c}/upload' data-value='' id='case3'></div>
+                                    <div class="upload" data-name="pictures" action='/cartoons/${cartoon.cartoonId?c}/chapters/upload' data-value='' id='case3'></div>
                                 </div>
                             </div>
                         </div>
